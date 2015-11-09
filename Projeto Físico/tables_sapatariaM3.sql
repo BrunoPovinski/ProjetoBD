@@ -10,11 +10,9 @@ CREATE TABLE Pessoa(
 	cpf varchar (11) not null,
 	rg varchar (14) not null,
 	telefone int not null,
-
 	primary key (cod_pessoa),
 	cpf (unique),
 	rg (unique)
-
 )
 go
 
@@ -107,13 +105,11 @@ CREATE TABLE Produto(
 go
 
 CREATE TABLE Fornecedor(
-	cod_fornecedor smallint not null,
 	endereco_fornecedor varchar(30) not null,
 	cnpj_fornecedor varchar(11) not null,
 	telefone_fornecedor int not null,
 	nome_fornecedor varchar(40) not null
-	primary key (cod_fornecedor),
-	unique (cnpj_fornecedor)
+	primary key (cnpj_fornecedor),
 )
 go
 
@@ -128,3 +124,201 @@ CREATE TABLE Atendimento(
 	foreign key (cod_atendente) references Atendente
 	foreign key (cod_cliente) references Cliente
 )
+go
+
+create index indexPessoa on Pessoa (cod_pessoa)
+create index indexProduto on Produto (cod_produto)
+create index indexFuncionario on Venda (cod_funcionario)
+create index indexProtocolo on Protocolo (cod_protocolo)
+create index indexFornecedor on Fornecedor (cod_fornecedor)
+create index indexCompra on Compra (cod_compra)
+create index indexAtendimento on Atendimento (cod_atendimento)
+
+go
+
+create procedure inserirCliente
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNasc datetime,
+	@endereco varchar(150),
+	@CEP char(8),
+	@estado char(2),
+	@cidade char(100),
+	@email varchar(50),
+	@telefone varchar(13),
+	@dataCadastro datetime,
+	@cod_cliente smallint
+as
+begin transaction
+	insert into Cliente
+	values(@cod_cliente, @email)
+	if @@ROWCOUNT > 0
+		begin
+			insert into Pessoa
+			values(@CPF, @RG, @nome, @endereco, @CEP, @estado, @cidade, @telefone, @dataCadastro, @dataNascimento)
+			if @@ROWCOUNT > 0
+				commit transaction
+			else
+				rollback transaction
+		end
+	else
+		rollback transaction
+end
+
+go
+
+create procedure inserirGerente
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNasc datetime,
+	@endereco varchar(150),
+	@CEP char(8),
+	@estado char(2),
+	@cidade char(100),
+	@email varchar(50),
+	@telefone varchar(13),
+	@salario money,
+	@cod_gerente smallint,
+	@ramal int
+as
+begin transaction
+	insert into Gerente
+	values(@cod_gerente, @ramal)
+	if @@ROWCOUNT > 0
+		begin
+			insert into Funcionario
+			values(@CPF, @RG, @nome, @dataNasc, @endereco, @CEP, @estado, @cidade, @email, @telefone, @salario)
+			if @@ROWCOUNT > 0
+				commit transaction
+			else
+				rollback transaction
+		end
+	else
+		rollback transaction
+end
+
+go
+
+create procedure inserirGerente
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNasc datetime,
+	@endereco varchar(150),
+	@CEP char(8),
+	@estado char(2),
+	@cidade char(100),
+	@email varchar(50),
+	@telefone varchar(13),
+	@salario money,
+	@cod_caixa smallint
+as
+begin transaction
+insert into Gerente
+values(@cod_caixa)
+if @@ROWCOUNT > 0
+	begin
+		insert into Funcionario
+		values(@CPF, @RG, @nome, @dataNasc, @endereco, @CEP, @estado, @cidade, @email, @telefone)
+		if @@ROWCOUNT > 0
+			commit transaction
+		else
+			rollback transaction
+	end
+else
+	rollback transaction
+end
+
+go
+
+create procedure inserirAtendente
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNasc datetime,
+	@endereco varchar(150),
+	@CEP char(8),
+	@estado char(2),
+	@cidade char(100),
+	@email varchar(50),
+	@telefone varchar(13),
+	@salario money,
+	@cod_atendente smallint
+as
+begin transaction
+insert into Atendente
+values(@cod_atendente)
+if @@ROWCOUNT > 0
+	begin
+		insert into Funcionario
+		values(@CPF, @RG, @nome, @dataNasc, @endereco, @CEP, @estado, @cidade, @sexo, @email, @telefone, @celular)
+		if @@ROWCOUNT > 0
+			commit transaction
+		else
+			rollback transaction
+	end
+else
+	rollback transaction
+end
+
+go
+
+create procedure inserirProduto
+	@cod_produto smallint,
+	@descricao char(50),
+	@quantidade int not null,
+	@marca varchar(20) not null,
+	@preco money not null,
+	@tamanho smallint not null
+as
+begin transaction
+insert into Produto
+values(@cod_produto, @descricao, @quantidade, @marca, @preco, @tamanho)
+if @@ROWCOUNT > 0
+	begin
+		commit transaction
+	end
+else
+	rollback transaction
+end
+
+go
+
+create procedure inserirFornecedor
+	@endereco_fornecedor varchar(30),
+	@cnpj_fornecedor varchar(11),
+	@telefone_fornecedor int,
+	@nome_fornecedor varchar(40)
+as
+begin transaction
+insert into Fornecedor
+values(@cnpj_fornecedor ,@endereco_fornecedor, @telefone_fornecedor, @nome_fornecedor)
+if @@ROWCOUNT > 0
+	begin
+		commit transaction
+	end
+else
+	rollback transaction
+end
+
+go
+
+create procedure inserirNotaFiscal
+	@cod_notafiscal smallint,
+	@cod_compra smallint,
+	@valor_total money
+as
+begin transaction
+insert into NotaFiscal
+values(@cod_notafiscal, @cod_compra, @valor_total)
+if @@ROWCOUNT > 0
+	begin
+		commit transaction
+	end
+else
+	rollback transaction
+end
+
+go
