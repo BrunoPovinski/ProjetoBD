@@ -79,6 +79,8 @@ go
 CREATE TABLE Compra(
 	cod_compra smallint not null,
 	forma_pagamento boolean not null,
+	quantidade int not null,
+	valorTotal_compra money not null,
 	primary key (cod_compra),
 	foreign key (cod_cliente) references Cliente
 )
@@ -127,11 +129,17 @@ CREATE TABLE Atendimento(
 go
 
 create index indexPessoa on Pessoa (cod_pessoa)
+go
 create index indexProduto on Produto (cod_produto)
+go
 create index indexFuncionario on Venda (cod_funcionario)
+go
 create index indexProtocolo on Protocolo (cod_protocolo)
+go
 create index indexFornecedor on Fornecedor (cod_fornecedor)
+go
 create index indexCompra on Compra (cod_compra)
+go
 create index indexAtendimento on Atendimento (cod_atendimento)
 
 go
@@ -320,5 +328,18 @@ if @@ROWCOUNT > 0
 else
 	rollback transaction
 end
+
+go
+
+create trigger criarNotaFiscal
+on Compra for insert
+as
+insert into NotaFiscal(cod_notafiscal, valor_total) values (inserted.cod_compra, inserted.valorTotal_compra)
+	if @@ROWCOUNT > 0
+		begin
+			commit transaction
+		end
+	else
+		rollback transaction
 
 go
