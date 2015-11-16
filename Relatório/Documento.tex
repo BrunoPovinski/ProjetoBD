@@ -23,6 +23,68 @@
 	
 	\section{Projeto Conceitual}
 	\section{Projeto Lógico}
+	\begin{flushleft}
+		Pessoa = \{nome, endereço, telefone, \uline{cpf}, rg, dataNascimento, dataCadastro\}
+	\end{flushleft}
+	\begin{flushleft}
+		Funcionário = \{\uline{cpf}, \uuline{cod\_funcionario}, cargo, salario\}
+	\end{flushleft}
+	
+	cpf = chave estrangeira referenciando Pessoa
+	
+	\begin{flushleft}
+		Gerente = \{\uline{cod\_gerente}, \uuline{cod\_funcionario}, ramal\}
+	\end{flushleft}
+	
+	cod\_funcionario = chave estrangeira referenciando Funcionário
+	
+	\begin{flushleft}
+		Caixa = \{\uline{cod\_caixa}, \uuline{cod\_funcionario}\}
+	\end{flushleft}
+	
+	cod\_funcionario = chave estrangeira referenciando Funcionário
+	
+	\begin{flushleft}
+		Atendente = \{\uline{cod\_atendente}, \uuline{cod\_funcionario}\}
+	\end{flushleft}
+	
+	cod\_funcionario = chave estrangeira referenciando Funcionário
+	
+	\begin{flushleft}
+		Cliente = \{\uline{cpf}, \uuline{cod\_cliente}, email\}
+	\end{flushleft}
+	
+	cpf = chave estrangeira referenciando Pessoa
+	
+	\begin{flushleft}
+		Dependente = \{\uline{cod\_dependente}, cod\_cliente\}
+	\end{flushleft}
+	
+	cod\_cliente = chave estrangeira referenciando Cliente
+	
+	\begin{flushleft}
+		Nota Fiscal = \{\uline{cod\_notafiscal}, cod\_cliente, cod\_atendente, data\_compra, valor\_total\}
+	\end{flushleft}
+	
+	cod\_cliente = chave estrangeira referenciando Cliente
+	
+	cod\_atendente = chave estrangeira referenciando Atendente
+	
+	\begin{flushleft}
+		Item da Compra = \{quantidade, valor, cod\_produto, cod\_atendente\}
+	\end{flushleft}
+	
+	cod\_produto = chave estrangeira referenciando Produto
+	
+	cod\_atendente = chave estrangeira referenciando Atendente
+	
+	\begin{flushleft}
+		Produto = \{\uline{cod\_produto}, descricao, qtd\_estoque, marca, preco, tamanho\}
+	\end{flushleft}
+	
+	\begin{flushleft}
+		Fornecedor = \{\uline{cnpj}, nome, endereco, telefone\}
+	\end{flushleft}
 	\section{Projeto Físico}
 	\section{Manipulação da Base de Dados}
 \end{document}
