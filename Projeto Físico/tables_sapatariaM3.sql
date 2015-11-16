@@ -126,7 +126,7 @@ create procedure inserirCliente
 	@CPF char(11),
 	@RG char(14),
 	@nome char(100),
-	@dataNasc datetime,
+	@dataNascimento datetime,
 	@endereco varchar(150),
 	@email varchar(50),
 	@telefone varchar(13),
@@ -148,14 +148,60 @@ begin transaction
 	else
 		rollback transaction
 end
-
+go
+create procedure inserirDependente
+	@cod_cliente smallint not null,
+	@cod_dependente smallint not null,
+as
+begin transaction
+	insert into Dependente
+	values(@cod_cliente, @cod_dependente)
+	if @@ROWCOUNT > 0
+		commit transaction
+	else
+		rollback transaction
+end
+go
+create procedure inserirCaixa
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNascimento datetime,
+	@cod_caixa smallint,
+	@cod_funcionario smallint,
+	@endereco varchar(150),
+	@email varchar(50),
+	@telefone varchar(13),
+as
+begin transaction
+	insert into Caixa
+	values(@cod_caixa)
+	if @@ROWCOUNT > 0
+		begin
+			insert into Funcionario
+			values(@CPF, @cod_funcionario)
+			if @@ROWCOUNT > 0
+				begin
+					insert into Pessoa(cpf, rg, nome, endereco, dataNascimento, telefone)
+					values(@CPF, @RG, @nome, @endereco, @dataNascimento, @telefone)
+					if @ROWCOUNT > 0
+						commit transaction
+					else
+						rollback transaction
+					end
+			else
+				rollback transaction
+		end
+	else
+		rollback transaction
+end
 go
 
 create procedure inserirGerente
 	@CPF char(11),
 	@RG char(14),
 	@nome char(100),
-	@dataNasc datetime,
+	@dataNascimento datetime,
 	@cod_gerente smallint,
 	@cod_funcionario smallint,
 	@endereco varchar(150),
@@ -168,6 +214,40 @@ as
 begin transaction
 	insert into Gerente
 	values(@cod_funcionario, @cod_gerente, @ramal)
+	if @@ROWCOUNT > 0
+		begin
+			insert into Funcionario
+			values(@CPF, @cod_funcionario, @cargo, @salario)
+			if @@ROWCOUNT > 0
+				begin
+					insert into Pessoa(cpf, rg, nome, endereco, dataNascimento, telefone)
+					values(@CPF, @RG, @nome, @endereco, @dataNascimento, @telefone)
+					if @ROWCOUNT > 0
+						commit transaction
+					else
+						rollback transaction
+					end
+			else
+				rollback transaction
+		end
+	else
+		rollback transaction
+end
+go
+create procedure inserirCaixa
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNascimento datetime,
+	@cod_caixa smallint,
+	@cod_funcionario smallint,
+	@endereco varchar(150),
+	@email varchar(50),
+	@telefone varchar(13),
+as
+begin transaction
+	insert into Caixa
+	values(@cod_caixa)
 	if @@ROWCOUNT > 0
 		begin
 			insert into Funcionario
@@ -187,7 +267,40 @@ begin transaction
 	else
 		rollback transaction
 end
-
+go
+create procedure inserirAtendente
+	@CPF char(11),
+	@RG char(14),
+	@nome char(100),
+	@dataNascimento datetime,
+	@cod_atendente smallint,
+	@cod_funcionario smallint,
+	@endereco varchar(150),
+	@email varchar(50),
+	@telefone varchar(13),
+as
+begin transaction
+	insert into Atendente
+	values(@cod_caixa)
+	if @@ROWCOUNT > 0
+		begin
+			insert into Funcionario
+			values(@CPF, @cod_funcionario, @cargo, @salario)
+			if @@ROWCOUNT > 0
+				begin
+					insert into Pessoa(cpf, rg, nome, endereco, dataCadastro, dataNascimento, telefone)
+					values(@CPF, @RG, @nome, @endereco, @dataCadastro, @dataNascimento, @telefone)
+					if @ROWCOUNT > 0
+						commit transaction
+					else
+						rollback transaction
+					end
+			else
+				rollback transaction
+		end
+	else
+		rollback transaction
+end
 go
 create procedure inserirProduto
 	@cod_produto smallint,
