@@ -352,7 +352,7 @@ begin transaction
 			rollback transaction
 		end
 go
-/*create procedure inserirItemDaCompra
+create procedure inserirItemDaCompra
 @cod_produto smallint,
 @cod_notafiscal smallint,
 @quantidade smallint
@@ -368,12 +368,27 @@ begin transaction
 		begin
 			rollback transaction
 		end
-go*/
+go
 
-create trigger CompraCalculaValor
+create trigger calcularValor
 on ItemDaCompra for insert
 as
+begin transaction
+	update ItemDaCompra set valor=(Select p.preco*i.quantidade from Produto p inner join inserted i on p.cod_produto = i.cod_produto)
+	if @@ROWCOUNT > 0
+		begin
+			commit transaction
+		end
+	else
+		begin
+			rollback transaction
+		end
+
+go
+
+create trigger CalcularValorNotaFiscal
+on Nota_Fiscal for insert
+as
 	begin
-		update Nota_Fiscal set valor_total=(Select p.preco*i.quantidade from Produto p inner join inserted i on p.cod_produto=i.cod_produto)
-		where cod_notafiscal = (Select cod_notafiscal from inserted)
+		update Nota_Fiscal set valor_total=(Select ic.valor from ItemDaCompra ic inner join inserted i on i.cod_notafiscal=ic.cod_notafiscal) 
 	end
