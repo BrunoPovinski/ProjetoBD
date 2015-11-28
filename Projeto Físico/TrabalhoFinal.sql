@@ -158,7 +158,7 @@ BEGIN TRANSACTION
 	return 0
 	END
 go
-/* Não está funcionando ainda */
+/* Nï¿½o estï¿½ funcionando ainda */
 create procedure inserirDependente
 @cod_cliente smallint not null,
 @cod_dependente smallint not null
@@ -401,22 +401,25 @@ create trigger CalcularValorNotaFiscal
 on Nota_Fiscal for insert
 as
 	begin
-		update Nota_Fiscal set valor_total=(Select ic.valor from ItemDaCompra ic inner join inserted i on i.cod_notafiscal=ic.cod_notafiscal) 
+		update Nota_Fiscal set valor_total=(Select ic.valor from ItemDaCompra ic inner join inserted i on i.cod_notafiscal=ic.cod_notafiscal)
 	end
 
 go
-	
+
 create trigger BaixaNoEstoque
 on ItemDaCompra for insert
 as
 	begin
 		update Produto set qtd_estoque=qtd_estoque-(Select i.quantidade from inserted i)
+		where cod_produto=(Select cod_produto from inserted)
 	end
 go
+
 create trigger FornecimentoEstoque
 on Fornecimento for insert
 as
 	begin
 	update Produto set qtd_estoque=qtd_estoque+(Select i.qtd_compra from inserted i)
-	end			
+	where cod_produto=(Select cod_produto from inserted)
+	end
 go
