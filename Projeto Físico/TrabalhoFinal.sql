@@ -1,146 +1,147 @@
-CREATE DATABASE sapatariaM3
+CREATE DATABASE Sapataria ON
+(NAME = sptrprimary, FILENAME = 'C:\BD\prim_sptr.mdf', SIZE = 10MB, MAXSIZE = 50MB, FILEGROWTH = 1MB),
+(NAME = ex03secondary, FILENAME = 'C:\BD\secon_sptr.ndf', SIZE = 25MB, MAXSIZE = 100MB, FILEGROWTH = 10%)
+LOG ON
+(NAME = sptrlog, FILENAME = 'C:\BD\log_sptr.ldf', SIZE = 10MB, MAXSIZE = 30MB, FILEGROWTH = 2MB)
 go
-use sapatariaM3
+USE Sapataria
 go
 CREATE TABLE Pessoa(
-	cpf varchar (11) not null,
-	nome char(30) not null,
-	endereco varchar(30) not null,
-	rg varchar(14) not null,
-	dataNascimento date not null,
-	dataCadastro date not null,
-	primary key (cpf),
-	unique(rg)
+	cpf varchar (11) NOT NULL,
+	nome char(30) NOT NULL,
+	endereco varchar(30) NOT NULL,
+	rg varchar(14) NOT NULL,
+	dataNascimento date NOT NULL,
+	dataCadastro date NOT NULL,
+	PRIMARY KEY (cpf),
+	UNIQUE(rg)
 )
 go
 CREATE TABLE Funcionario(
-	cod_funcionario smallint not null,
-	cpf varchar(11) not null,
-	cargo varchar(20) not null,
-	salario money not null,
-	primary key (cod_funcionario),
-	foreign key (cpf) references Pessoa,
+	cod_funcionario smallint IDENTITY NOT NULL,
+	cpf varchar(11) NOT NULL,
+	cargo varchar(20) NOT NULL,
+	salario money NOT NULL,
+	PRIMARY KEY (cod_funcionario),
+	FOREIGN KEY (cpf) REFERENCES Pessoa
 )
 go
 CREATE TABLE Cliente (
-	cod_cliente smallint not null,
-	email varchar(20) not null,
-	cpf varchar(11) not null,
-	primary key (cod_cliente),
-	foreign key (cpf) references Pessoa
+	cod_cliente smallint IDENTITY NOT NULL,
+	email varchar(20) NOT NULL,
+	cpf varchar(11) NOT NULL,
+	PRIMARY KEY (cod_cliente),
+	FOREIGN KEY (cpf) references Pessoa
 )
 go
 CREATE TABLE Gerente (
-	cod_gerente smallint not null,
-	cod_funcionario smallint not null,
-	ramal int not null,
-	primary key (cod_gerente),
-	foreign key (cod_funcionario) references Funcionario,
-	unique(ramal)
+	cod_gerente smallint IDENTITY NOT NULL,
+	cod_funcionario smallint NOT NULL,
+	ramal int NOT NULL,
+	PRIMARY KEY (cod_gerente),
+	FOREIGN KEY (cod_funcionario) REFERENCES Funcionario,
+	UNIQUE(ramal)
 )
 go
 CREATE TABLE Caixa (
-	cod_caixa smallint not null,
-	cod_funcionario smallint not null,
-	primary key (cod_caixa),
-	foreign key (cod_funcionario) references Funcionario
+	cod_caixa smallint IDENTITY NOT NULL,
+	cod_funcionario smallint NOT NULL,
+	PRIMARY KEY (cod_caixa),
+	FOREIGN KEY (cod_funcionario) REFERENCES Funcionario
 )
 go
 CREATE TABLE Atendente (
-	cod_atendente smallint not null,
-	cod_funcionario smallint not null,
-	primary key (cod_atendente),
-	foreign key (cod_funcionario) references Funcionario,
+	cod_atendente smallint IDENTITY NOT NULL,
+	cod_funcionario smallint NOT NULL,
+	PRIMARY KEY (cod_atendente),
+	FOREIGN KEY (cod_funcionario) REFERENCES Funcionario
 )
 go
 CREATE TABLE Dependente(
-	cod_dependente smallint not null,
-	cod_cliente smallint not null,
-	primary key (cod_dependente),
-	foreign key (cod_cliente) references Cliente
+	cod_dependente smallint IDENTITY NOT NULL,
+	cod_cliente smallint NOT NULL,
+	PRIMARY KEY (cod_dependente),
+	FOREIGN KEY (cod_cliente) REFERENCES Cliente
 )
 go
 CREATE TABLE Nota_Fiscal(
-	cod_notafiscal smallint not null,
-	cod_cliente smallint not null,
-	cod_atendente smallint not null,
-	data_compra date not null,
-	valor_total money not null
-	primary key (cod_notafiscal),
-	foreign key (cod_cliente) references Cliente,
-	foreign key (cod_atendente) references Atendente
+	cod_notafiscal smallint IDENTITY NOT NULL,
+	cod_cliente smallint NOT NULL,
+	cod_atendente smallint NOT NULL,
+	data_compra date NOT NULL,
+	valor_total money NOT NULL,
+	PRIMARY KEY (cod_notafiscal),
+	FOREIGN KEY (cod_cliente) REFERENCES Cliente,
+	FOREIGN KEY (cod_atendente) REFERENCES Atendente
 )
 go
 CREATE TABLE Produto(
-	cod_produto smallint not null,
-	descricao varchar(50) not null,
-	qtd_estoque int not null,
-	marca char(20) not null,
-	preco money not null,
-	tamanho smallint not null
-	primary key (cod_produto),
+	cod_produto smallint IDENTITY NOT NULL,
+	descricao varchar(50) NOT NULL,
+	qtd_estoque int NOT NULL,
+	marca char(20) NOT NULL,
+	preco money NOT NULL,
+	tamanho smallint NOT NULL,
+	PRIMARY KEY (cod_produto)
 )
 go
 CREATE TABLE ItemDaCompra(
-	cod_produto smallint not null,
-	cod_notafiscal smallint not null,
-	quantidade int not null,
-	valor money not null,
-	foreign key (cod_produto) references Produto,
-	foreign key (cod_notafiscal) references Nota_Fiscal
+	cod_produto smallint NOT NULL,
+	cod_notafiscal smallint NOT NULL,
+	quantidade int NOT NULL,
+	valor money NOT NULL,
+	FOREIGN KEY (cod_produto) REFERENCES Produto,
+	FOREIGN KEY (cod_notafiscal) REFERENCES Nota_Fiscal
 )
-/*drop table ItemDaCompra*/
 go
 CREATE TABLE Fornecedor(
-	endereco varchar(30) not null,
-	cnpj varchar(11) not null,
-	telefone int not null,
-	nome varchar(40) not null
-	primary key (cnpj),
+	endereco varchar(30) NOT NULL,
+	cnpj varchar(11) NOT NULL,
+	telefone int NOT NULL,
+	nome varchar(40) NOT NULL,
+	PRIMARY KEY (cnpj)
 )
 go
 CREATE TABLE Fornecimento(
-	cod_produto smallint not null,
-	cnpj varchar(11) not null,
-	cod_compra smallint not null,
-	qtd_compra int not null,
-	data_compra date not null,
-	foreign key (cnpj) references Fornecedor,
-	foreign key (cod_produto) references Produto,
-	primary key(cod_compra)
+	cod_produto smallint NOT NULL,
+	cnpj varchar(11) NOT NULL,
+	cod_compra smallint IDENTITY NOT NULL,
+	qtd_compra int NOT NULL,
+	data_compra date NOT NULL,
+	FOREIGN KEY (cnpj) REFERENCES Fornecedor,
+	FOREIGN KEY (cod_produto) REFERENCES Produto,
+	PRIMARY KEY(cod_compra)
 )
 go
-create index indexPessoa on Pessoa (cpf)
+CREATE INDEX INDEXPessoa ON Pessoa (cpf)
 go
-create index indexCliente on Cliente (cod_cliente)
+CREATE INDEX INDEXCliente ON Cliente (cod_cliente)
 go
-create index indexGerente on Gerente (cod_gerente)
+CREATE INDEX INDEXGerente ON Gerente (cod_gerente)
 go
-create index indexCaixa on Caixa (cod_caixa)
+CREATE INDEX INDEXCaixa ON Caixa (cod_caixa)
 go
-create index indexProduto on Produto (cod_produto)
+CREATE INDEX INDEXProduto ON Produto (cod_produto)
 go
-create index indexNotaFisca on NotaFiscal (cod_notafiscal)
+CREATE INDEX INDEXNotaFisca ON NotaFiscal (cod_notafiscal)
 go
-create index indexFornecedor on Fornecedor (cod_fornecedor)
+CREATE INDEX INDEXFornecedor ON Fornecedor (cod_fornecedor)
 go
-create procedure inserirCliente
+CREATE PROCEDURE inserirCliente
 @CPF char(11),
 @RG char(14),
 @nome char(100),
 @dataNascimento datetime,
 @endereco varchar(150),
 @email varchar(50),
-@telefone varchar(13),
-@dataCadastro datetime,
-@cod_cliente smallint
+@telefone varchar(13)
 as
 BEGIN TRANSACTION
-	insert into Cliente values(@CPF, @cod_cliente, @email)
+	INSERT INTO Pessoa(cpf, rg, nome, endereco, dataCadastro, dataNascimento)
+		VALUES (@CPF, @RG, @nome, @endereco, GETDATE(), @dataNascimento)
 	if @@ROWCOUNT > 0
 	BEGIN
-		insert into Pessoa(cpf, rg, nome, endereco, dataCadastro, dataNascimento)
-		values(@CPF, @RG, @nome, @endereco, @dataCadastro, @dataNascimento)
+		INSERT INTO Cliente (cpf,email) VALUES (@CPF, @email)
 			if @@ROWCOUNT > 0
 			BEGIN
 				COMMIT TRANSACTION
@@ -158,53 +159,52 @@ BEGIN TRANSACTION
 	return 0
 	END
 go
-/* N�o est� funcionando ainda */
-create procedure inserirDependente
-@cod_cliente smallint not null,
-@cod_dependente smallint not null
+CREATE PROCEDURE inserirDependente
+@cod_cliente smallint,
+@cod_dependente smallint
 as
-begin transaction
-	insert into Dependente values(@cod_cliente, @cod_dependente)
+BEGIN TRANSACTION
+	INSERT INTO Dependente VALUES (@cod_cliente, @cod_dependente)
 	if @@ROWCOUNT > 0
-		begin
-		commit transaction
-		return 1
-		end
+		BEGIN
+			COMMIT TRANSACTION
+			return 1
+		END
 	else
-		begin
-		rollback transaction
-		return 0
-		end
+		BEGIN
+			ROLLBACK TRANSACTION
+			return 0
+		END
 go
-create procedure inserirCaixa
+CREATE PROCEDURE inserirCaixa
 @CPF char(11),
 @RG char(14),
 @nome char(100),
 @dataNascimento datetime,
-@cod_caixa smallint,
-@cod_funcionario smallint,
 @endereco varchar(150),
 @cargo varchar(20),
 @salario money
 as
 BEGIN TRANSACTION
-	insert into Caixa values(@cod_caixa, @cod_funcionario)
+	INSERT INTO Pessoa(cpf, rg, nome, endereco, dataNascimento, dataCadastro)
+	VALUES (@CPF, @RG, @nome, @endereco, @dataNascimento, GETDATE())
 	if @@ROWCOUNT > 0
 	BEGIN
-		insert into Funcionario values(@CPF, @cod_funcionario, @cargo, @salario)
+		INSERT INTO Funcionario VALUES (@CPF, @cargo, @salario)
+		DECLARE @cod_funcionario int
+		SELECT @cod_funcionario = SCOPE_IDENTITY()
 			if @@ROWCOUNT > 0
 			BEGIN
-				insert into Pessoa(cpf, rg, nome, endereco, dataNascimento)
-				values(@CPF, @RG, @nome, @endereco, @dataNascimento)
+			INSERT INTO Caixa VALUES (@cod_funcionario)
 				if @@ROWCOUNT > 0
-					begin
-					commit transaction
-					return 1
-					end
+					BEGIN
+						COMMIT TRANSACTION	
+						return 1
+					END
 				else
-					begin
-						rollback transaction
-					end
+					BEGIN
+						ROLLBACK TRANSACTION
+					END
 			END
 			else
 			BEGIN
@@ -214,40 +214,40 @@ BEGIN TRANSACTION
 		END
 	else
 	BEGIN
-	ROLLBACK TRANSACTION
-	return 0
+		ROLLBACK TRANSACTION
+		return 0
 	END
 go
-create procedure inserirGerente
+CREATE PROCEDURE inserirGerente
 @CPF char(11),
 @RG char(14),
 @nome char(100),
 @dataNascimento datetime,
-@cod_gerente smallint,
-@cod_funcionario smallint,
 @endereco varchar(150),
 @cargo varchar(20),
 @salario money,
 @ramal int
 as
 BEGIN TRANSACTION
-	insert into Gerente values(@cod_funcionario, @cod_gerente, @ramal)
+	INSERT INTO Pessoa (cpf, rg, nome, endereco, dataNascimento, dataCadastro)
+	VALUES (@CPF, @RG, @nome, @endereco, @dataNascimento, GETDATE())
 	if @@ROWCOUNT > 0
 	BEGIN
-		insert into Funcionario values(@CPF, @cod_funcionario, @cargo, @salario)
+		INSERT INTO Funcionario VALUES (@CPF, @cargo, @salario)
+			DECLARE @cod_funcionario int
+			SELECT @cod_funcionario = SCOPE_IDENTITY()
 			if @@ROWCOUNT > 0
 			BEGIN
-				insert into Pessoa(cpf, rg, nome, endereco, dataNascimento)
-				values(@CPF, @RG, @nome, @endereco, @dataNascimento)
+			INSERT INTO Gerente VALUES(@cod_funcionario, @ramal)
 				if @@ROWCOUNT > 0
-					begin
-					commit transaction
-					return 1
-					end
+					BEGIN
+						COMMIT TRANSACTION
+						return 1
+					END
 				else
-					begin
-						rollback transaction
-					end
+					BEGIN
+						ROLLBACK TRANSACTION
+					END
 			END
 			else
 			BEGIN
@@ -257,8 +257,8 @@ BEGIN TRANSACTION
 		END
 	else
 	BEGIN
-	ROLLBACK TRANSACTION
-	return 0
+		ROLLBACK TRANSACTION
+		return 0
 	END
 go
 create procedure inserirAtendente
@@ -266,31 +266,31 @@ create procedure inserirAtendente
 @RG char(14),
 @nome char(100),
 @dataNascimento datetime,
-@cod_atendente smallint,
-@cod_funcionario smallint,
 @endereco varchar(150),
 @cargo varchar(20),
 @salario money,
 @ramal int
 as
 BEGIN TRANSACTION
-	insert into Atendente values(@cod_funcionario, @cod_atendente)
+	INSERT INTO Pessoa (cpf, rg, nome, endereco, dataNascimento, dataCadastro)
+	VALUES (@CPF, @RG, @nome, @endereco, @dataNascimento, GETDATE())
 	if @@ROWCOUNT > 0
 	BEGIN
-		insert into Funcionario values(@CPF, @cod_funcionario, @cargo, @salario)
+		INSERT INTO Funcionario VALUES(@CPF, @cargo, @salario)
+			DECLARE @cod_funcionario int
+			SELECT @cod_funcionario = SCOPE_IDENTITY()
 			if @@ROWCOUNT > 0
 			BEGIN
-				insert into Pessoa(cpf, rg, nome, endereco, dataNascimento)
-				values(@CPF, @RG, @nome, @endereco, @dataNascimento)
+			INSERT INTO Atendente VALUES(@cod_funcionario)
 				if @@ROWCOUNT > 0
-					begin
-					commit transaction
-					return 1
-					end
+					BEGIN
+						COMMIT TRANSACTION
+						return 1
+					END
 				else
-					begin
-						rollback transaction
-					end
+					BEGIN
+						ROLLBACK TRANSACTION
+					END
 			END
 			else
 			BEGIN
@@ -300,126 +300,147 @@ BEGIN TRANSACTION
 		END
 	else
 	BEGIN
-	ROLLBACK TRANSACTION
-	return 0
+		ROLLBACK TRANSACTION
+		return 0
 	END
 go
-create procedure inserirProduto
-@cod_produto smallint,
+CREATE PROCEDURE inserirProduto
 @descricao char(50),
 @qtd_estoque int not null,
 @marca varchar(20) not null,
 @preco money not null,
 @tamanho smallint not null
 as
-begin transaction
-insert into Produto values(@cod_produto, @descricao, @qtd_estoque, @marca, @preco, @tamanho)
+BEGIN TRANSACTION
+INSERT INTO Produto VALUES(@descricao, @qtd_estoque, @marca, @preco, @tamanho)
 	if @@ROWCOUNT > 0
-		begin
-			commit transaction
+		BEGIN
+			COMMIT TRANSACTION
 			return 1
-		end
+		END
 	else
-		begin
-			rollback transaction
+		BEGIN
+			ROLLBACK TRANSACTION
 			return 0
-		end
+		END
 
 go
-create procedure inserirFornecedor
-@endereco varchar(30),
+CREATE PROCEDURE inserirFornecedor
+@ENDereco varchar(30),
 @cnpj varchar(11),
 @nome varchar(40),
 @telefone int
 as
-begin transaction
-	insert into Fornecedor values(@endereco, @cnpj, @telefone, @nome)
+BEGIN TRANSACTION
+	INSERT INTO Fornecedor VALUES(@endereco, @cnpj, @telefone, @nome)
 	if @@ROWCOUNT > 0
-		begin
-			commit transaction
+		BEGIN
+			COMMIT TRANSACTION
 			return 1
-		end
+		END
 	else
-		begin
-			rollback transaction
-		end
+		BEGIN
+			ROLLBACK TRANSACTION
+		END
 go
-create procedure inserirNotaFiscal
-@cod_notafiscal smallint,
+CREATE PROCEDURE inserirNotaFiscal
 @cod_cliente smallint,
 @cod_atendente smallint,
-@data_compra date,
 @valor_total money
 as
-begin transaction
-	insert into Nota_Fiscal values(@cod_notafiscal, @cod_cliente, @cod_atendente, @data_compra, @valor_total)
+BEGIN TRANSACTION
+	INSERT INTO Nota_Fiscal VALUES(@cod_cliente, @cod_atendente, GETDATE(), @valor_total)
 	if @@ROWCOUNT > 0
-		begin
-			commit transaction
+		BEGIN
+			COMMIT TRANSACTION
 			return 1
-		end
+		END
 	else
-		begin
-			rollback transaction
-		end
+		BEGIN
+			ROLLBACK TRANSACTION
+		END
 go
-create procedure inserirItemDaCompra
+CREATE PROCEDURE inserirItemDaCompra
 @cod_produto smallint,
 @cod_notafiscal smallint,
 @quantidade smallint
 as
-begin transaction
-	insert into ItemDaCompra values(@cod_produto, @cod_notafiscal, @quantidade)
+BEGIN TRANSACTION
+	INSERT INTO ItemDaCompra (cod_produto,cod_notafiscal,quantidade) VALUES (@cod_produto, @cod_notafiscal, @quantidade)
 	if @@ROWCOUNT > 0
-		begin
-			commit transaction
+		BEGIN
+			COMMIT TRANSACTION
 			return 1
-		end
+		END
 	else
-		begin
-			rollback transaction
-		end
+		BEGIN
+			ROLLBACK TRANSACTION
+			return 0
+		END
 go
-
-create trigger calcularValor
-on ItemDaCompra for insert
+CREATE PROCEDURE inserirFornecimento
+@qtd_compra smallint,
 as
-begin transaction
-	update ItemDaCompra set valor=(Select p.preco*i.quantidade from Produto p inner join inserted i on p.cod_produto = i.cod_produto)
+BEGIN TRANSACTION
+	INSERT INTO Fornecimento (qtd_compra, data_compra) VALUES (@qtd_compra, GETDATE())
 	if @@ROWCOUNT > 0
-		begin
-			commit transaction
-		end
+		BEGIN
+			COMMIT TRANSACTION
+			return 1
+		END
 	else
-		begin
-			rollback transaction
-		end
+		BEGIN
+			ROLLBACK TRANSACTION
+			return 0
+		END
+go
+CREATE TRIGGER calcularValor
+ON ItemDaCompra FOR INSERT
+as
+BEGIN TRANSACTION
+	UPDATE ItemDaCompra SET valor=(SELECT p.preco*i.quantidade FROM Produto p INNER JOIN inserted i ON p.cod_produto = i.cod_produto)
+	if @@ROWCOUNT > 0
+		BEGIN
+			COMMIT TRANSACTION
+		END
+	else
+		BEGIN
+			ROLLBACK TRANSACTION
+		END
+END
+go
+
+CREATE TRIGGER CalcularValorNotaFiscal
+ON Nota_Fiscal FOR INSERT
+as
+	BEGIN
+		UPDATE Nota_Fiscal SET valor_total = (SELECT ic.valor FROM ItemDaCompra ic INNER JOIN inserted i ON i.cod_notafiscal=ic.cod_notafiscal)
+		if @@ROWCOUNT > 0
+			BEGIN
+				COMMIT TRANSACTION
+			END
+		else
+			BEGIN
+				ROLLBACK TRANSACTION
+			END
+	END
 
 go
 
-create trigger CalcularValorNotaFiscal
-on Nota_Fiscal for insert
+CREATE TRIGGER BaixaNoEstoque
+ON ItemDaCompra FOR INSERT
 as
-	begin
-		update Nota_Fiscal set valor_total=(Select ic.valor from ItemDaCompra ic inner join inserted i on i.cod_notafiscal=ic.cod_notafiscal)
-	end
-
+	BEGIN
+		UPDATE Produto SET qtd_estoque=qtd_estoque - (SELECT i.quantidade FROM inserted i)
+		WHERE cod_produto=(SELECT cod_produto FROM inserted)
+	END
 go
 
-create trigger BaixaNoEstoque
-on ItemDaCompra for insert
+CREATE TRIGGER fornecimentoEstoque
+ON Fornecimento FOR INSERT
 as
-	begin
-		update Produto set qtd_estoque=qtd_estoque-(Select i.quantidade from inserted i)
-		where cod_produto=(Select cod_produto from inserted)
-	end
-go
-
-create trigger FornecimentoEstoque
-on Fornecimento for insert
-as
-	begin
-	update Produto set qtd_estoque=qtd_estoque+(Select i.qtd_compra from inserted i)
-	where cod_produto=(Select cod_produto from inserted)
-	end
+	BEGIN
+		UPDATE Produto SET qtd_estoque=qtd_estoque + (SELECT i.qtd_compra FROM inserted i)
+		WHERE cod_produto=(SELECT cod_produto FROM inserted)
+	END
 go
