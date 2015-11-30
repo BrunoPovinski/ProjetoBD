@@ -6,7 +6,22 @@
 \usepackage[scaled]{beramono}
 \renewcommand*\familydefault{\ttdefault}
 \usepackage[T1]{fontenc}
+\usepackage{listings}
 \include{tex_definedcolors}
+
+\lstset{numbers=left,
+	stepnumber=1,
+	firstnumber=1,
+	numberstyle=\tiny,
+	extendedchars=true,
+	breaklines=true,
+	frame=tb,
+	basicstyle=\footnotesize,
+	stringstyle=\ttfamily,
+	showstringspaces=false
+}
+\renewcommand{\lstlistingname}{Código}
+\renewcommand{\lstlistlistingname}{}
 
 \title{ST767A - Banco de Dados II \\ Projeto Final}
 \author{Bruno J. M. G. Povinski - 135172 \\ Henrique R. Bicudo - 138510 \\ Mateus G. de Andrade - 136976 \\ Ricardo T. M. Junior - 137494}
@@ -22,6 +37,7 @@
 	\end{center}
 	
 	\section{Projeto Conceitual}
+	\newpage
 	\section{Projeto Lógico}
 	\begin{flushleft}
 		Pessoa = \{nome, endereço, telefone, \uline{cpf}, rg, dataNascimento, dataCadastro\}
@@ -85,6 +101,31 @@
 	\begin{flushleft}
 		Fornecedor = \{\uline{cnpj}, nome, endereco, telefone\}
 	\end{flushleft}
+	
+	\begin{flushleft}
+		Fornecimento = \{\uline{cod\_compra}, qtd\_compra, data\_compra, cnpj, cod\_produto\}
+	\end{flushleft}
+	
+	cnpj = chave estrangeira referenciando Fornecedor
+	
+	cod\_produto = chave estrangeira referenciando Produto
+	
+	
 	\section{Projeto Físico}
+	\lstinputlisting[language=SQL, label=sqlselect, firstline=1, lastline=5, caption={Comando de Criação do Banco de Dados}]{SQL/TrabalhoFinal.sql}
+	\lstinputlisting[language=SQL, label=sqlselect, firstline=7, lastline=7, caption={Comando de Indicação do Banco de Dados a ser Utilizado}]{SQL/TrabalhoFinal.sql}
+	\lstinputlisting[language=SQL, label=sqlselect,
+	firstline=9, lastline=18, caption={Comando de Criação da Tabela \textit{Pessoa}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Funcionário}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Cliente}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Gerente}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Caixa}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Atendente}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Dependente}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Nota Fiscal}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Produto}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{ItemDaCompra}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Fornecedor}}]{SQL/TrabalhoFinal.sql}
+	%\lstinputlisting[language=SQL, label=sqlselect, caption={Comando de Criação da Tabela \textit{Fornecimento}}]{SQL/TrabalhoFinal.sql}
 	\section{Manipulação da Base de Dados}
 \end{document}
